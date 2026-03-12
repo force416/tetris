@@ -1,87 +1,87 @@
 # Tetris
 
-這是一個以 Go 開發、可在 macOS 上執行的 Tetris 專案。專案目前聚焦於建立可玩的核心玩法迴圈、清楚的模組分工，以及可逐步擴充與驗證的程式結構。
+This is a Go-based Tetris project for macOS. The current focus is a playable core gameplay loop, clear module boundaries, and a codebase that can be extended and verified incrementally.
 
-## 專案目前包含什麼
+## What is included today
 
-目前程式已提供以下核心能力：
+The project currently provides these core capabilities:
 
-- 可執行的單機 Tetris 遊戲視窗
-- 基本操作：左移、右移、旋轉、加速下落
-- 遊戲狀態切換：暫停、繼續、重新開始、遊戲結束
-- 基本規則：方塊生成、碰撞判定、鎖定、消行、計分、等級提升
-- 畫面資訊：棋盤、目前方塊、下一個方塊預覽、分數、等級、消行數
+- A playable single-player Tetris game window
+- Basic controls: move left, move right, rotate, and soft drop
+- Game state transitions: pause, resume, restart, and game over
+- Core rules: piece spawning, collision checks, locking, line clears, scoring, and level progression
+- On-screen information: board, active piece, next piece preview, score, level, and cleared lines
 
-這些能力以目前程式碼與 OpenSpec 規格為準，目標是先把核心玩法與可維護結構做好，而不是一次加入大量延伸功能。
+These capabilities are based on the current codebase and OpenSpec documents. The goal is to build a solid and maintainable gameplay foundation before expanding into non-core features.
 
-## 技術背景
+## Technical background
 
-- 語言：Go
-- 圖形與輸入：Ebiten
-- 目標平台：macOS
-- 專案風格：優先維持核心規則、輸入處理與渲染分離，讓遊戲邏輯可以獨立理解與測試
+- Language: Go
+- Graphics and input: Ebiten
+- Target platform: macOS
+- Project style: keep game rules, input handling, and rendering separated so the gameplay logic remains understandable and testable
 
-## 如何執行與驗證
+## Run and verify
 
-專案提供 `Makefile` 入口：
+The project provides `Makefile` entry points:
 
 ```bash
 make run
 ```
 
-啟動視窗版 Tetris。
+Starts the windowed Tetris application.
 
 ```bash
 make test
 ```
 
-執行 `go test ./...`，驗證目前的自動化測試。
+Runs `go test ./...` to verify the current automated tests.
 
 ```bash
 make build
 ```
 
-編譯執行檔到 `dist/build/Tetris`。
+Builds the executable to `dist/build/Tetris`.
 
 ```bash
 make app
 ```
 
-打包 macOS `.app` 到 `dist/Tetris.app`。
+Packages a macOS `.app` bundle at `dist/Tetris.app`.
 
-如果你偏好直接使用 Go 指令，主要入口在 `cmd/tetris/main.go`。
+If you prefer to use Go commands directly, the main entry point is `cmd/tetris/main.go`.
 
-## 操作方式
+## Controls
 
-- `←` / `A`：向左移動
-- `→` / `D`：向右移動
-- `↑` / `W` / `X` / `Space`：旋轉
-- `↓` / `S`：加速下落
-- `P`：暫停或繼續
-- `R`：重新開始
+- `←` / `A`: move left
+- `→` / `D`: move right
+- `↑` / `W` / `X` / `Space`: rotate
+- `↓` / `S`: soft drop
+- `P`: pause or resume
+- `R`: restart
 
-## 專案結構
+## Project structure
 
 - `cmd/tetris`
-  應用程式入口，負責建立遊戲設定並啟動整個應用。
+  Application entry point. Creates the game configuration and starts the app.
 - `internal/app`
-  應用層協調者，負責主迴圈、時間累積、輸入 action 到遊戲 command 的轉換，以及重力 tick 推進。
+  Application coordinator. Owns the main loop, time accumulation, input-action to game-command translation, and gravity tick progression.
 - `internal/game`
-  核心規則與狀態模型，負責棋盤、方塊生成、碰撞判定、旋轉、鎖定、消行、計分、等級與遊戲狀態。
+  Core rules and state model. Owns the board, piece spawning, collision checks, rotation, locking, line clears, scoring, leveling, and overall game state.
 - `internal/input`
-  鍵盤輸入輪詢，負責把按鍵轉成遊戲可理解的 action。
+  Keyboard polling layer. Translates key presses into gameplay actions.
 - `internal/render`
-  畫面渲染，負責把目前遊戲狀態畫成棋盤、側欄與暫停或結束提示。
+  Rendering layer. Draws the current game state as the board, sidebar, and pause or game-over overlays.
 - `openspec`
-  需求、設計與任務追蹤文件，記錄每個 change 的提案與實作步驟。
+  Requirements, design, and task-tracking documents for proposed and archived changes.
 
-## 目前限制
+## Current limitations
 
-- 專案目前聚焦於單機核心玩法，沒有排行榜、多人模式、帳號系統或網路功能。
-- README 只描述目前實作或既有規格可驗證的能力，不預先承諾尚未開發完成的功能。
-- 目前是早期階段專案，文件與功能會隨 OpenSpec change 一起演進。
+- The project is currently focused on the single-player core gameplay loop and does not include leaderboards, multiplayer, accounts, or network features.
+- The README only describes capabilities that are implemented today or supported by existing specs; it does not promise unfinished features.
+- This is still an early-stage project, and both the documentation and feature set will continue evolving through OpenSpec-managed changes.
 
-## 規格與開發脈絡
+## Specs and development context
 
-- 核心玩法規格可參考 `openspec/specs/playable-core-loop/spec.md`
-- 目前所有變更以 OpenSpec 流程管理，會先有 proposal、design、specs，再進入實作
+- The core gameplay specification is in `openspec/specs/playable-core-loop/spec.md`
+- Project changes are managed through OpenSpec, moving from proposal to design to specs before implementation
