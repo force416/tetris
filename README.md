@@ -58,7 +58,7 @@ Packages a macOS `.app` bundle at `dist/Tetris.app`.
 make dmg
 ```
 
-Packages a macOS `.dmg` file at `dist/Tetris-darwin-<arch>.dmg`.
+Packages a universal macOS `.dmg` file at `dist/Tetris-darwin-universal.dmg`.
 
 If you prefer to use Go commands directly, the main entry point is `cmd/tetris/main.go`.
 
