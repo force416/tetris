@@ -21,6 +21,11 @@ These capabilities are based on the current codebase and OpenSpec documents. The
 - Target platform: macOS
 - Project style: keep game rules, input handling, and rendering separated so the gameplay logic remains understandable and testable
 
+## Download
+
+- GitHub Releases: <https://github.com/force416/tetris/releases/latest>
+- Each tagged release publishes a macOS `.dmg` asset that can be downloaded directly from the release page
+
 ## Run and verify
 
 The project provides `Makefile` entry points:
@@ -48,6 +53,12 @@ make app
 ```
 
 Packages a macOS `.app` bundle at `dist/Tetris.app`.
+
+```bash
+make dmg
+```
+
+Packages a macOS `.dmg` file at `dist/Tetris-darwin-<arch>.dmg`.
 
 If you prefer to use Go commands directly, the main entry point is `cmd/tetris/main.go`.
 

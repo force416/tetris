@@ -6,10 +6,14 @@ APP_DIR := $(DIST_DIR)/$(APP_NAME).app
 APP_CONTENTS := $(APP_DIR)/Contents
 APP_MACOS := $(APP_CONTENTS)/MacOS
 APP_RESOURCES := $(APP_CONTENTS)/Resources
+TARGET_OS := darwin
+TARGET_ARCH ?= $(shell go env GOARCH)
+VERSION ?= 0.1.0
 BIN_PATH := $(BUILD_DIR)/$(APP_NAME)
 PLIST_PATH := $(APP_CONTENTS)/Info.plist
+DMG_PATH := $(DIST_DIR)/$(APP_NAME)-$(TARGET_OS)-$(TARGET_ARCH).dmg
 
-.PHONY: help run test build clean app bundle plist
+.PHONY: help run test build clean app bundle plist dmg
 
 help:
 	@echo "可用目標："
@@ -17,6 +21,7 @@ help:
 	@echo "  make test   - 執行 go test ./..."
 	@echo "  make build  - 編譯執行檔到 $(BIN_PATH)"
 	@echo "  make app    - 打包 macOS .app 到 $(APP_DIR)"
+	@echo "  make dmg    - 打包 macOS .dmg 到 $(DMG_PATH)"
 	@echo "  make clean  - 清除 dist 目錄"
 
 run:
@@ -29,7 +34,7 @@ build: $(BIN_PATH)
 
 $(BIN_PATH):
 	mkdir -p $(BUILD_DIR)
-	CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -o $(BIN_PATH) $(MODULE)
+	CGO_ENABLED=1 GOOS=$(TARGET_OS) GOARCH=$(TARGET_ARCH) go build -o $(BIN_PATH) $(MODULE)
 
 app: clean $(APP_MACOS)/$(APP_NAME) $(PLIST_PATH)
 
@@ -61,7 +66,7 @@ $(PLIST_PATH):
 	'    <key>CFBundlePackageType</key>' \
 	'    <string>APPL</string>' \
 	'    <key>CFBundleShortVersionString</key>' \
-	'    <string>0.1.0</string>' \
+	'    <string>$(VERSION)</string>' \
 	'    <key>CFBundleVersion</key>' \
 	'    <string>1</string>' \
 	'    <key>LSMinimumSystemVersion</key>' \
@@ -70,6 +75,9 @@ $(PLIST_PATH):
 	'    <true/>' \
 	'</dict>' \
 	'</plist>' > $(PLIST_PATH)
+
+dmg: app
+	hdiutil create -volname "$(APP_NAME)" -srcfolder "$(APP_DIR)" -ov -format UDZO "$(DMG_PATH)"
 
 clean:
 	rm -rf $(DIST_DIR)
